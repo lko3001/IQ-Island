@@ -29,4 +29,4 @@ The IQ Island is where you can see the names, scores, and quotes of the players 
 
 ## Have Fun!
 
-IQ Island is a fun and challenging quiz app that will test your intelligence and see how you rank among the other players. Play as many times as you want and see if you can make it to the top of the Minds of Fame. Good luck!
+IQ Island is a fun and challenging quiz app that will test your intelligence and see how you rank among the other players. Play as many times as you want and see if you can make it to the top of the IQ Island. Good luck!
