@@ -392,31 +392,29 @@ export default function Start() {
         <div className="flex h-full min-h-screen flex-col items-center justify-center gap-16">
           <h1 className="text-7xl font-black lg:text-9xl">IQ Island</h1>
           <div className="flex flex-row gap-4">
-            <Link href="/start">
-              <ButtonCVA
-                onClick={() => {
-                  fetch("https://the-trivia-api.com/api/questions?limit=50")
-                    .then((res) => res.json())
-                    .then((data) => {
-                      const shuffledAnswers = data.map((question: Question) =>
-                        [
-                          question.correctAnswer,
-                          ...question.incorrectAnswers,
-                        ].sort(() => Math.random() - 0.5)
-                      );
-                      dispatch({
-                        type: "fetch_questions",
-                        payload: { questions: data, answers: shuffledAnswers },
-                      });
-                    })
-                    .then(() => {
-                      resetTimeout();
-                      dispatch({ type: "start" });
+            <ButtonCVA
+              onClick={() => {
+                fetch("https://the-trivia-api.com/api/questions?limit=50")
+                  .then((res) => res.json())
+                  .then((data) => {
+                    const shuffledAnswers = data.map((question: Question) =>
+                      [
+                        question.correctAnswer,
+                        ...question.incorrectAnswers,
+                      ].sort(() => Math.random() - 0.5)
+                    );
+                    dispatch({
+                      type: "fetch_questions",
+                      payload: { questions: data, answers: shuffledAnswers },
                     });
-                }}
-                text="Start"
-              />
-            </Link>
+                  })
+                  .then(() => {
+                    resetTimeout();
+                    dispatch({ type: "start" });
+                  });
+              }}
+              text="Start"
+            />
           </div>
         </div>
       )}
