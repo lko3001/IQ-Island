@@ -77,15 +77,19 @@ export default function Done() {
               <p className="text-sm">Score: {currentPlayer?.score}</p>
             </div>
             <p>{currentPlayer?.quote}</p>
-            {("0" + new Date(currentPlayer!.updatedAt).getDate()).slice(-2)}/
-            {("0" + (new Date(currentPlayer!.updatedAt).getMonth() + 1)).slice(
-              -2
-            )}
+            {currentPlayer?.updatedAt &&
+              ("0" + new Date(currentPlayer?.updatedAt).getDate()).slice(-2)}
             /
-            {new Date(currentPlayer!.updatedAt)
-              .getFullYear()
-              .toString()
-              .slice(-2)}
+            {currentPlayer?.updatedAt &&
+              ("0" + (new Date(currentPlayer?.updatedAt).getMonth() + 1)).slice(
+                -2
+              )}
+            /
+            {currentPlayer?.updatedAt &&
+              new Date(currentPlayer?.updatedAt)
+                .getFullYear()
+                .toString()
+                .slice(-2)}
           </div>
         </dialog>
       </div>
