@@ -299,7 +299,7 @@ export default function Start() {
             ) : (
               <span className="max-w-xl text-center text-sm text-red-500 sm:text-base">
                 This name already exists but you can use a different name. You
-                cannot update this user's score because yours is lower
+                cannot update the score of that user because yours is lower
               </span>
             )}
           </div>
