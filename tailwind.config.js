@@ -12,10 +12,10 @@ module.exports = {
         spaceGrotesk: "var(--spaceGrotesk)",
       },
       boxShadow: {
-        solid: "0px 4px 0px 2px black",
-        "solid-pressed": "0px 0px 0px 2px black",
+        solid: "0px 4px 0px black",
+        "solid-pressed": "0px 0px 0px black",
       },
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/line-clamp")],
 };

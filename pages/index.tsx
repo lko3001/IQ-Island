@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useRef } from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
 import Time from "@/components/Time";
 import { ButtonCVA } from "@/components/cva/ButtonCVA";
 import { AiFillHeart, AiFillStar } from "react-icons/ai";
@@ -103,7 +103,6 @@ function reducer(state: State, action: Action) {
         disabled: false,
       };
     case "start": {
-      console.log("clicked start");
       return {
         ...state,
         started: true,
@@ -172,8 +171,11 @@ function reducer(state: State, action: Action) {
 
 export default function Start() {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [clicked, setClicked] = useState(false);
+  const [categories, setCategories] = useState<{ [key: string]: string[] }>({});
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const router = useRouter();
-  const { changePlayerName } = usePlayer();
+  const { changePlayerObj } = usePlayer();
 
   const timerId = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const nameInput = useRef<HTMLInputElement | null>(null);
@@ -216,6 +218,14 @@ export default function Start() {
   }
 
   useEffect(() => {
+    fetch("https://the-trivia-api.com/api/categories")
+      .then((res) => res.json())
+      .then((data) => {
+        setCategories(data);
+      });
+  }, []);
+
+  useEffect(() => {
     if (
       state.started &&
       state.qNumber + 1 <= state.questions.length &&
@@ -229,7 +239,9 @@ export default function Start() {
   }, [state.qNumber]);
 
   return (
-    <div className={`flex min-h-screen flex-col ${state.color}`}>
+    <div
+      className={`flex min-h-screen flex-col p-4 pt-[25vh] sm:pt-0 ${state.color}`}
+    >
       {state.started && state.ended == false ? (
         <>
           <div className="flex h-full flex-row items-center gap-6 p-4 [&>span]:text-xl [&>span]:font-bold [&>span]:md:text-3xl">
@@ -252,6 +264,7 @@ export default function Start() {
                 state.questions[state.qNumber].question) ||
                 "Loading..."}
             </h1>
+            {state.questions[state.qNumber].category}
             <div className="flex w-full flex-col gap-4 md:grid md:grid-cols-2 md:grid-rows-2">
               {state.questions.length &&
                 state.answers[state.qNumber].map(
@@ -309,6 +322,13 @@ export default function Start() {
               e.preventDefault();
 
               let existingPlayer: Player;
+              const playerObject = {
+                id: 0,
+                name: nameInput.current!.value,
+                score: state.score,
+                quote: quoteInput.current!.value || undefined,
+                updatedAt: new Date(),
+              };
 
               if (state.exists === false) {
                 console.log("Checking if player already exists");
@@ -334,14 +354,10 @@ export default function Start() {
               if (state.exists && state.isScoreHigher) {
                 fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/updatePlayer`, {
                   method: "POST",
-                  body: JSON.stringify({
-                    name: nameInput.current!.value,
-                    score: state.score,
-                    quote: quoteInput.current!.value || undefined,
-                  }),
+                  body: JSON.stringify(playerObject),
                 });
                 console.log("Wants to Update");
-                changePlayerName(nameInput.current!.value);
+                changePlayerObj(playerObject);
                 router.push("/iq-island");
               } else if (existingPlayer!) {
                 console.log(state.exists);
@@ -349,14 +365,10 @@ export default function Start() {
               } else if (!state.isScoreHigher) {
                 fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/createPlayer`, {
                   method: "POST",
-                  body: JSON.stringify({
-                    name: nameInput.current!.value,
-                    score: state.score,
-                    quote: quoteInput.current!.value || undefined,
-                  }),
+                  body: JSON.stringify(playerObject),
                 });
                 console.log("Creating player...");
-                changePlayerName(nameInput.current!.value);
+                changePlayerObj(playerObject);
                 router.push("/iq-island");
               }
             }}
@@ -389,33 +401,87 @@ export default function Start() {
           </form>
         </div>
       ) : (
-        <div className="flex h-full min-h-screen flex-col items-center justify-center gap-16">
-          <h1 className="text-7xl font-black lg:text-9xl">IQ Island</h1>
-          <div className="flex flex-row gap-4">
-            <ButtonCVA
-              onClick={() => {
-                fetch("https://the-trivia-api.com/api/questions?limit=50")
-                  .then((res) => res.json())
-                  .then((data) => {
-                    const shuffledAnswers = data.map((question: Question) =>
-                      [
-                        question.correctAnswer,
-                        ...question.incorrectAnswers,
-                      ].sort(() => Math.random() - 0.5)
-                    );
-                    dispatch({
-                      type: "fetch_questions",
-                      payload: { questions: data, answers: shuffledAnswers },
+        <div className="flex grow flex-col items-center justify-center">
+          <div className="contents">
+            <h1 className="mb-6 text-7xl font-black lg:text-9xl">IQ Island</h1>
+            <div className="flex flex-col items-center gap-16">
+              <ButtonCVA
+                bigText
+                disabled={clicked}
+                disableHover={clicked}
+                greyedOut={clicked}
+                onClick={() => {
+                  setClicked(true);
+                  console.log(
+                    `https://the-trivia-api.com/api/questions?limit=25${
+                      selectedCategories.length && selectedCategories.join(",")
+                    }`
+                  );
+                  fetch(
+                    `https://the-trivia-api.com/api/questions?limit=25${
+                      selectedCategories.length &&
+                      `&categories=${selectedCategories.join(",")}`
+                    }`
+                  )
+                    .then((res) => res.json())
+                    .then((data) => {
+                      const shuffledAnswers = data.map((question: Question) =>
+                        [
+                          question.correctAnswer,
+                          ...question.incorrectAnswers,
+                        ].sort(() => Math.random() - 0.5)
+                      );
+                      dispatch({
+                        type: "fetch_questions",
+                        payload: {
+                          questions: data,
+                          answers: shuffledAnswers,
+                        },
+                      });
+                    })
+                    .then(() => {
+                      resetTimeout();
+                      dispatch({ type: "start" });
                     });
-                  })
-                  .then(() => {
-                    resetTimeout();
-                    dispatch({ type: "start" });
-                  });
-              }}
-              text="Start"
-            />
+                }}
+                text="Start"
+              />
+              <section className="max-w-4xl">
+                <h4 className="mb-8 text-center text-lg font-bold">
+                  Select Cateogories
+                </h4>
+                <div className="flex flex-wrap justify-center gap-4">
+                  {Object.keys(categories).map((category) => {
+                    const categorySlug = categories[category][0];
+                    return (
+                      <ButtonCVA
+                        key={categorySlug}
+                        text={category}
+                        className="rounded-full text-sm"
+                        intent="special"
+                        pressed={selectedCategories.includes(categorySlug)}
+                        onClick={() => {
+                          if (selectedCategories.includes(categorySlug)) {
+                            setSelectedCategories((prev) =>
+                              prev.filter((cat) => cat !== categorySlug)
+                            );
+                          } else {
+                            setSelectedCategories((prev) => [
+                              ...prev,
+                              categorySlug,
+                            ]);
+                          }
+                        }}
+                      />
+                    );
+                  })}
+                </div>
+              </section>
+            </div>
           </div>
+          <footer className="mt-8 w-full text-center text-sm text-neutral-500 [&>a]:underline">
+            <Link href="/iq-island">IQ Island</Link>
+          </footer>
         </div>
       )}
     </div>

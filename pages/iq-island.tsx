@@ -1,5 +1,8 @@
 import { usePlayer } from "@/components/context/PlayerContext";
+import { ButtonCVA } from "@/components/cva/ButtonCVA";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { AiOutlineArrowLeft } from "react-icons/ai";
 
 interface Player {
   id: number;
@@ -10,7 +13,7 @@ interface Player {
 }
 
 export default function Done() {
-  const { playerName } = usePlayer();
+  const { fullPlayerObj } = usePlayer();
   const [players, setPlayers] = useState<Player[]>([]);
   const [currentPlayer, setCurrentPlayer] = useState<Player | undefined>(
     undefined
@@ -22,18 +25,41 @@ export default function Done() {
     fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/getPlayers`)
       .then((res) => res.json())
       .then((data) => {
-        data.sort((a: Player, b: Player) => b.score - a.score);
-        setPlayers(data);
-      })
-      .then(() => {
-        playerRef.current?.focus();
-        playerRef.current?.scrollIntoView({ behavior: "smooth" });
+        if (Array.isArray(data)) {
+          const playerIndex = data.findIndex(
+            (el: Player) => el.name == fullPlayerObj.name
+          );
+          if (playerIndex == -1 && fullPlayerObj.name) {
+            data.push(fullPlayerObj);
+          }
+          data.sort((a: Player, b: Player) => b.score - a.score);
+          setPlayers(data);
+        } else {
+          setPlayers([fullPlayerObj]);
+        }
       });
   }, []);
 
+  useEffect(() => {
+    console.log("Players has changed");
+    console.log(players);
+    if (players && playerRef.current) {
+      playerRef.current?.focus();
+      playerRef.current?.scrollIntoView({
+        behavior: "smooth",
+      });
+    }
+  }, [players]);
+
   return (
     <>
-      <div className="my-16">
+      <Link href="/" className="mt-4 ml-4 block w-fit">
+        <button className="black-shadow group flex w-fit flex-row items-center justify-start gap-2 rounded-full bg-blue-500 p-2 px-5 text-white transition-colors duration-200 hover:bg-blue-600 focus-visible:translate-y-1 active:translate-y-1">
+          <AiOutlineArrowLeft className="text-2xl transition-transform duration-200 group-hover:-translate-x-2" />
+          <span>Restart</span>
+        </button>
+      </Link>
+      <div className="py-16">
         <h1 className="mb-2 text-center text-5xl font-bold sm:text-6xl">
           IQ Island
         </h1>
@@ -46,8 +72,9 @@ export default function Done() {
             return (
               <div
                 key={player.id}
-                className={`flex cursor-pointer scroll-m-10 flex-row items-center justify-between gap-6 p-4 hover:bg-blue-50 focus:outline-none focus-visible:bg-blue-50`}
-                ref={player.name == playerName ? playerRef : null}
+                className="flex cursor-pointer flex-row items-center gap-6 p-4 hover:bg-blue-50 focus:bg-blue-50 focus:outline-none focus-visible:bg-blue-50"
+                ref={player.name == fullPlayerObj.name ? playerRef : null}
+                id={player.name == fullPlayerObj.name ? "yes" : ""}
                 tabIndex={0}
                 onClick={() => {
                   dialogRef.current?.showModal();
@@ -55,9 +82,12 @@ export default function Done() {
                 }}
               >
                 <div>
-                  <span className="mr-6">#{index + 1}</span>
-                  <h1 className="inline">{player.name}</h1>
+                  <span className="mr-6 text-neutral-500">#{index + 1}</span>
+                  <h1 className="inline font-bold">{player.name}</h1>
                 </div>
+                <span className="grow text-sm text-neutral-500 line-clamp-1">
+                  {player.quote}
+                </span>
                 <span>{player.score}</span>
               </div>
             );
@@ -65,7 +95,7 @@ export default function Done() {
         </div>
         <dialog
           ref={dialogRef}
-          className="overflow-hidden rounded-lg p-0"
+          className="min-h-[20vh] min-w-[50vw] overflow-hidden rounded-lg p-0 shadow-lg"
           onClick={() => dialogRef.current?.close()}
         >
           <div
