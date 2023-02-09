@@ -239,9 +239,7 @@ export default function Start() {
   }, [state.qNumber]);
 
   return (
-    <div
-      className={`flex min-h-screen flex-col p-4 pt-[25vh] sm:pt-0 ${state.color}`}
-    >
+    <div className={`flex min-h-screen flex-col px-4 ${state.color}`}>
       {state.started && state.ended == false ? (
         <>
           <div className="flex h-full flex-row items-center gap-6 p-4 [&>span]:text-xl [&>span]:font-bold [&>span]:md:text-3xl">
@@ -264,7 +262,6 @@ export default function Start() {
                 state.questions[state.qNumber].question) ||
                 "Loading..."}
             </h1>
-            {state.questions[state.qNumber].category}
             <div className="flex w-full flex-col gap-4 md:grid md:grid-cols-2 md:grid-rows-2">
               {state.questions.length &&
                 state.answers[state.qNumber].map(
@@ -401,7 +398,7 @@ export default function Start() {
           </form>
         </div>
       ) : (
-        <div className="flex grow flex-col items-center justify-center">
+        <div className="flex grow flex-col items-center justify-center pt-[20vh] sm:pt-0">
           <div className="contents">
             <h1 className="mb-6 text-7xl font-black lg:text-9xl">IQ Island</h1>
             <div className="flex flex-col items-center gap-16">
@@ -447,7 +444,7 @@ export default function Start() {
                 text="Start"
               />
               <section className="max-w-4xl">
-                <h4 className="mb-8 text-center text-lg font-bold">
+                <h4 className="mb-4 text-center text-lg font-bold">
                   Select Cateogories
                 </h4>
                 <div className="flex flex-wrap justify-center gap-4">
@@ -479,7 +476,7 @@ export default function Start() {
               </section>
             </div>
           </div>
-          <footer className="mt-8 w-full text-center text-sm text-neutral-500 [&>a]:underline">
+          <footer className="mt-8 mb-4 w-full text-center text-sm text-neutral-500 [&>a]:underline">
             <Link href="/iq-island">IQ Island</Link>
           </footer>
         </div>
