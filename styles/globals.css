@@ -4,7 +4,7 @@
 
 @layer base {
   .black-shadow {
-    @apply mb-1 rounded-lg shadow-solid outline -outline-offset-2 outline-black focus-visible:outline-2 active:outline-2;
+    @apply mb-1 rounded-lg shadow-solid outline outline-2 -outline-offset-2 outline-black focus-visible:outline-2 active:outline-2;
   }
   .black-shadow:focus-visible:not(input, textarea),
   .black-shadow:active:not(input, textarea) {

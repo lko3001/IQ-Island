@@ -10,6 +10,7 @@ type PlayerType = {
 type FullPlayerType = {
   fullPlayerObj: PlayerType;
   changePlayerObj: (newPlayerContextObj: PlayerType) => void;
+  clearPlayerObj: () => void;
 };
 
 const PlayerContext = createContext({} as FullPlayerType);
@@ -20,11 +21,14 @@ export function usePlayer() {
 
 export function PlayerProvider({ children }: { children: ReactNode }) {
   const [fullPlayer, setPlayerContextObj] = useState({} as PlayerType);
+
   const changePlayerObj = (newPlayerContextObj: PlayerType) =>
     setPlayerContextObj(newPlayerContextObj);
+  const clearPlayerObj = () => setPlayerContextObj({} as PlayerType);
+
   return (
     <PlayerContext.Provider
-      value={{ fullPlayerObj: fullPlayer, changePlayerObj }}
+      value={{ fullPlayerObj: fullPlayer, changePlayerObj, clearPlayerObj }}
     >
       {children}
     </PlayerContext.Provider>

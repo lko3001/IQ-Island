@@ -53,7 +53,7 @@ export default function Done() {
 
   return (
     <>
-      <Link href="/" className="mt-4 ml-4 block w-fit">
+      <Link href="/" className="fixed top-4 left-4 w-fit">
         <button className="black-shadow group flex w-fit flex-row items-center justify-start gap-2 rounded-full bg-blue-500 p-2 px-5 text-white transition-colors duration-200 hover:bg-blue-600 focus-visible:translate-y-1 active:translate-y-1">
           <AiOutlineArrowLeft className="text-2xl transition-transform duration-200 group-hover:-translate-x-2" />
           <span>Restart</span>

@@ -5,6 +5,7 @@ import { AiFillHeart, AiFillStar } from "react-icons/ai";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { usePlayer } from "@/components/context/PlayerContext";
+import { useStats } from "@/components/context/StatsContext";
 
 interface Question {
   category: string;
@@ -175,7 +176,8 @@ export default function Start() {
   const [categories, setCategories] = useState<{ [key: string]: string[] }>({});
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const router = useRouter();
-  const { changePlayerObj } = usePlayer();
+  const { changePlayerObj, clearPlayerObj } = usePlayer();
+  const { changeStats, clearStats } = useStats();
 
   const timerId = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const nameInput = useRef<HTMLInputElement | null>(null);
@@ -223,6 +225,8 @@ export default function Start() {
       .then((data) => {
         setCategories(data);
       });
+    clearPlayerObj();
+    clearStats();
   }, []);
 
   useEffect(() => {
@@ -235,6 +239,11 @@ export default function Start() {
     } else if (state.started && state.qNumber !== 0 && !state.ended) {
       console.log("THE END");
       dispatch({ type: "end_game" });
+      changeStats({
+        score: state.score,
+        questionsLength: state.questions.length,
+      });
+      // router.push("/finished");
     }
   }, [state.qNumber]);
 
