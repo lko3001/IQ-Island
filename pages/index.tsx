@@ -225,8 +225,8 @@ export default function Start() {
       .then((data) => {
         setCategories(data);
       });
-    clearPlayerObj();
-    clearStats();
+    // clearPlayerObj();
+    // clearStats();
   }, []);
 
   useEffect(() => {
@@ -243,7 +243,7 @@ export default function Start() {
         score: state.score,
         questionsLength: state.questions.length,
       });
-      // router.push("/finished");
+      router.push("/finished");
     }
   }, [state.qNumber]);
 
@@ -420,17 +420,21 @@ export default function Start() {
                   setClicked(true);
                   console.log(
                     `https://the-trivia-api.com/api/questions?limit=25${
-                      selectedCategories.length && selectedCategories.join(",")
+                      selectedCategories.length
+                        ? `&categories=${selectedCategories.join(",")}`
+                        : ""
                     }`
                   );
                   fetch(
                     `https://the-trivia-api.com/api/questions?limit=25${
-                      selectedCategories.length &&
-                      `&categories=${selectedCategories.join(",")}`
+                      selectedCategories.length
+                        ? `&categories=${selectedCategories.join(",")}`
+                        : ""
                     }`
                   )
                     .then((res) => res.json())
                     .then((data) => {
+                      console.log(data, "aaaaaaaaa");
                       const shuffledAnswers = data.map((question: Question) =>
                         [
                           question.correctAnswer,

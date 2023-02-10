@@ -22,8 +22,8 @@ export function StatsProvider({ children }: { children: ReactNode }) {
   const changeStats = (options: Stats) => {
     setStats((prev) => ({
       ...prev,
-      score: options.score || prev.score,
-      questionsLength: options.questionsLength || prev.questionsLength,
+      score: options.score || 0,
+      questionsLength: options.questionsLength || 0,
     }));
   };
   const clearStats = () => setStats({} as Stats);
