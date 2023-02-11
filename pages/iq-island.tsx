@@ -57,8 +57,11 @@ export default function Done() {
       <Head>
         <title>IQ Island</title>
         <meta property="og:title" content="IQ Island" />
-        <meta name="description" content="Look other players' score" />
-        <meta property="og:description" content="Look other players' score" />
+        <meta name="description" content={`Look other players\' score`} />
+        <meta
+          property="og:description"
+          content={`Look other players\' score`}
+        />
 
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta property="og:type" content="website" />
