@@ -41,8 +41,8 @@ export default function Finished() {
   return (
     <>
       <Head>
-        <title>You're Done</title>
-        <meta property="og:title" content={`You\'re Done`} />
+        <title>{`You\'re Done`}</title>
+        <meta property="og:title" content="{`You\'re Done`}" />
         <meta name="description" content="Quiz is done and finished" />
         <meta property="og:description" content="Quiz is done and finished" />
 
