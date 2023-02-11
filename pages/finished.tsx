@@ -32,7 +32,6 @@ export default function Finished() {
     if (Object.keys(stats).length) {
       setQuestionsLength(stats.questionsLength);
       setScore(stats.score);
-      // clearStats();
     } else {
       router.push("/");
     }
@@ -88,7 +87,6 @@ export default function Finished() {
             );
             const data = await res.json();
 
-            // error here
             existingPlayer = await data.find(
               (player: Player) => player.name === nameInput.current!.value
             );
@@ -122,70 +120,6 @@ export default function Finished() {
             router.push("/iq-island");
           }
         }}
-        // onSubmit={(e) => {
-        //   e.preventDefault();
-
-        //   console.log(stats);
-
-        //   let existingPlayer: Player;
-        //   const playerObject = {
-        //     id: 0,
-        //     name: nameInput.current!.value,
-        //     score: score,
-        //     quote: quoteInput.current!.value || undefined,
-        //     updatedAt: new Date(),
-        //   };
-
-        //   if (exists === false) {
-        //     console.log("Checking if player already exists");
-        //     fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/getPlayers`)
-        //       .then((res) => res.json())
-        //       .then((data) => {
-        //         console.log("data is: ", data);
-
-        //         console.log(nameInput.current, nameInput.current?.value);
-
-        //         existingPlayer = data.find(
-        //           (player: Player) => player.name === nameInput.current!.value
-        //         );
-
-        //         setExists(Boolean(existingPlayer));
-        //         setIsScoreHigher(
-        //           existingPlayer ? score > existingPlayer.score : undefined
-        //         );
-        //       });
-        //   }
-
-        //   if (exists && isScoreHigher) {
-        //     console.log("a");
-        //     fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/updatePlayer`, {
-        //       method: "POST",
-        //       body: JSON.stringify(playerObject),
-        //     }).then(() => {
-        //       console.log("Wants to Update");
-        //       changePlayerObj(playerObject);
-        //       // clearStats();
-        //       router.push("/iq-island");
-        //     });
-        //   } else if (existingPlayer!) {
-        //     console.log("aasdf");
-        //     console.log(exists);
-        //     console.log("Name already exists");
-        //   } else if (!isScoreHigher) {
-        //     console.log("aasdf");
-        //     fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/createPlayer`, {
-        //       method: "POST",
-        //       body: JSON.stringify(playerObject),
-        //     }).then(() => {
-        //       console.log("Creating player...");
-        //       changePlayerObj(playerObject);
-        //       // clearStats();
-        //       router.push("/iq-island");
-        //     });
-        //   } else {
-        //     console.log("aaa");
-        //   }
-        // }}
       >
         <input
           type="text"
@@ -194,16 +128,10 @@ export default function Finished() {
           minLength={3}
           placeholder="John Doe*"
           required
-          onChange={() =>
-            // dispatch({
-            //   type: "does_name_exists",
-            //   payload: { boolean: false, isScoreHigher: undefined },
-            // })
-            {
-              setExists(false);
-              setIsScoreHigher(undefined);
-            }
-          }
+          onChange={() => {
+            setExists(false);
+            setIsScoreHigher(undefined);
+          }}
         />
         <textarea
           className="black-shadow h-40 w-full px-4 py-2 sm:max-w-sm"

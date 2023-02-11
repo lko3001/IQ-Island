@@ -225,8 +225,6 @@ export default function Start() {
       .then((data) => {
         setCategories(data);
       });
-    // clearPlayerObj();
-    // clearStats();
   }, []);
 
   useEffect(() => {
@@ -301,110 +299,7 @@ export default function Start() {
         </>
       ) : state.qNumber !== 0 ? (
         <div className="flex min-h-screen flex-col items-center justify-center gap-8">
-          <div className="text-center">
-            <h1 className="mb-2 text-4xl font-bold sm:text-5xl">
-              You Scored {state.score}/{state.questions.length}
-            </h1>
-            {!state.exists ? (
-              <span className="text-sm sm:text-base ">
-                If you want to lock your score in the IQ Island, write your name
-              </span>
-            ) : state.isScoreHigher ? (
-              <span className="max-w-xl text-center text-sm text-red-500 sm:text-base">
-                That name already exists, but you can <strong>change it</strong>
-                , or if you want to
-                <strong> update your score</strong>, click the button again.
-              </span>
-            ) : (
-              <span className="max-w-xl text-center text-sm text-red-500 sm:text-base">
-                This name already exists but you can use a different name. You
-                cannot update the score of that user because yours is lower
-              </span>
-            )}
-          </div>
-          <form
-            className="contents"
-            onSubmit={async (e) => {
-              e.preventDefault();
-
-              let existingPlayer: Player;
-              const playerObject = {
-                id: 0,
-                name: nameInput.current!.value,
-                score: state.score,
-                quote: quoteInput.current!.value || undefined,
-                updatedAt: new Date(),
-              };
-
-              if (state.exists === false) {
-                console.log("Checking if player already exists");
-                const res = await fetch(
-                  `${process.env.NEXT_PUBLIC_BASE_URL}/api/getPlayers`
-                );
-                const data = await res.json();
-                existingPlayer = data.find(
-                  (player: Player) => player.name === nameInput.current!.value
-                );
-
-                dispatch({
-                  type: "does_name_exists",
-                  payload: {
-                    boolean: Boolean(existingPlayer),
-                    isScoreHigher: existingPlayer
-                      ? state.score > existingPlayer.score
-                      : undefined,
-                  },
-                });
-              }
-
-              if (state.exists && state.isScoreHigher) {
-                fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/updatePlayer`, {
-                  method: "POST",
-                  body: JSON.stringify(playerObject),
-                });
-                console.log("Wants to Update");
-                changePlayerObj(playerObject);
-                router.push("/iq-island");
-              } else if (existingPlayer!) {
-                console.log(state.exists);
-                console.log("Name already exists");
-              } else if (!state.isScoreHigher) {
-                fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/createPlayer`, {
-                  method: "POST",
-                  body: JSON.stringify(playerObject),
-                });
-                console.log("Creating player...");
-                changePlayerObj(playerObject);
-                router.push("/iq-island");
-              }
-            }}
-          >
-            <input
-              type="text"
-              className="black-shadow bg-white px-4 py-2"
-              ref={nameInput}
-              minLength={3}
-              placeholder="John Doe*"
-              required
-              onChange={() =>
-                dispatch({
-                  type: "does_name_exists",
-                  payload: { boolean: false, isScoreHigher: undefined },
-                })
-              }
-            />
-            <textarea
-              className="black-shadow h-40 w-full px-4 py-2 sm:max-w-sm"
-              placeholder="I got more points than you because..."
-              ref={quoteInput}
-            />
-            {(state.isScoreHigher === undefined || state.isScoreHigher) && (
-              <ButtonCVA
-                text={`Lock your ${state.exists ? "score" : "name"}`}
-                intent={state.exists ? "good" : "normal"}
-              />
-            )}
-          </form>
+          <h1>Loading...</h1>
         </div>
       ) : (
         <div className="flex grow flex-col items-center justify-center pt-[20vh] sm:pt-0">

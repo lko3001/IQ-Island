@@ -61,7 +61,6 @@ export interface ButtonProps
   text?: string;
 }
 
-// From this
 export const ButtonCVA: React.FC<ButtonProps> = ({
   className,
   intent,

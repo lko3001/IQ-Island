@@ -72,7 +72,7 @@ export default function Done() {
             return (
               <div
                 key={player.id}
-                className="flex cursor-pointer flex-row items-center gap-6 p-4 hover:bg-blue-50 focus:bg-blue-50 focus:outline-none focus-visible:bg-blue-50"
+                className="flex cursor-pointer scroll-m-10 flex-row items-center gap-6 p-4 hover:bg-blue-50 focus:bg-blue-50 focus:outline-none focus-visible:bg-blue-50"
                 ref={player.name == fullPlayerObj.name ? playerRef : null}
                 id={player.name == fullPlayerObj.name ? "yes" : ""}
                 tabIndex={0}
