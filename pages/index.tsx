@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { usePlayer } from "@/components/context/PlayerContext";
 import { useStats } from "@/components/context/StatsContext";
+import Head from "next/head";
 
 interface Question {
   category: string;
@@ -246,149 +247,165 @@ export default function Start() {
   }, [state.qNumber]);
 
   return (
-    <div className={`flex min-h-screen flex-col px-4 ${state.color}`}>
-      {state.started && state.ended == false ? (
-        <>
-          <div className="flex h-full flex-row items-center gap-6 p-4 [&>span]:text-xl [&>span]:font-bold [&>span]:md:text-3xl">
-            <span>
-              {state.qNumber + 1}/{state.questions.length}
-            </span>
-            <span className="flex flex-row items-center gap-2">
-              {state.score}
-              <AiFillStar className="text-yellow-500" />
-            </span>
-            <Time styleProp={state.style} />
-            <span className="flex flex-row items-center gap-2">
-              {state.hp}
-              <AiFillHeart className="text-red-500" />
-            </span>
-          </div>
-          <div className="m-auto flex h-full w-full max-w-7xl flex-col justify-start gap-20 px-4 md:justify-evenly">
-            <h1 className="my-16 text-center text-3xl font-bold md:my-0 md:text-5xl lg:text-6xl">
-              {(state.questions.length &&
-                state.questions[state.qNumber].question) ||
-                "Loading..."}
-            </h1>
-            <div className="flex w-full flex-col gap-4 md:grid md:grid-cols-2 md:grid-rows-2">
-              {state.questions.length &&
-                state.answers[state.qNumber].map(
-                  (answer: string, index: number) => (
-                    <ButtonCVA
-                      key={answer}
-                      text={answer}
-                      disabled={state.disabled}
-                      big={true}
-                      disableHover={state.disabled}
-                      intent={
-                        state.answered &&
-                        answer == state.questions[state.qNumber].correctAnswer
-                          ? "good"
-                          : state.answered &&
-                            answer !=
-                              state.questions[state.qNumber].correctAnswer &&
-                            index == state.selected
-                          ? "danger"
-                          : "normal"
-                      }
-                      onClick={() => handleAnswerClick(answer, index)}
-                    />
-                  )
-                )}
+    <>
+      <Head>
+        <title>IQ Island</title>
+        <meta property="og:title" content="IQ Island" />
+        <meta name="description" content="Start the quiz and have fun" />
+        <meta property="og:description" content="Start the quiz and have fun" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta property="og:type" content="website" />
+        <link rel="shortcut icon" href="/q.ico" />
+        <meta property="og:image" content="/fUudAEr.png" />
+        <meta property="og:url" content="https://iq-island.vercel.app/" />
+      </Head>
+      <div className={`flex min-h-screen flex-col px-4 ${state.color}`}>
+        {state.started && state.ended == false ? (
+          <>
+            <div className="flex h-full flex-row items-center gap-6 p-4 [&>span]:text-xl [&>span]:font-bold [&>span]:md:text-3xl">
+              <span>
+                {state.qNumber + 1}/{state.questions.length}
+              </span>
+              <span className="flex flex-row items-center gap-2">
+                {state.score}
+                <AiFillStar className="text-yellow-500" />
+              </span>
+              <Time styleProp={state.style} />
+              <span className="flex flex-row items-center gap-2">
+                {state.hp}
+                <AiFillHeart className="text-red-500" />
+              </span>
             </div>
-          </div>
-        </>
-      ) : state.qNumber !== 0 ? (
-        <div className="flex min-h-screen flex-col items-center justify-center gap-8">
-          <h1>Loading...</h1>
-        </div>
-      ) : (
-        <div className="flex grow flex-col items-center justify-center pt-[20vh] sm:pt-0">
-          <div className="contents">
-            <h1 className="mb-6 text-7xl font-black lg:text-9xl">IQ Island</h1>
-            <div className="flex flex-col items-center gap-16">
-              <ButtonCVA
-                bigText
-                disabled={clicked}
-                disableHover={clicked}
-                greyedOut={clicked}
-                onClick={() => {
-                  setClicked(true);
-                  console.log(
-                    `https://the-trivia-api.com/api/questions?limit=25${
-                      selectedCategories.length
-                        ? `&categories=${selectedCategories.join(",")}`
-                        : ""
-                    }`
-                  );
-                  fetch(
-                    `https://the-trivia-api.com/api/questions?limit=25${
-                      selectedCategories.length
-                        ? `&categories=${selectedCategories.join(",")}`
-                        : ""
-                    }`
-                  )
-                    .then((res) => res.json())
-                    .then((data) => {
-                      console.log(data, "aaaaaaaaa");
-                      const shuffledAnswers = data.map((question: Question) =>
-                        [
-                          question.correctAnswer,
-                          ...question.incorrectAnswers,
-                        ].sort(() => Math.random() - 0.5)
-                      );
-                      dispatch({
-                        type: "fetch_questions",
-                        payload: {
-                          questions: data,
-                          answers: shuffledAnswers,
-                        },
-                      });
-                    })
-                    .then(() => {
-                      resetTimeout();
-                      dispatch({ type: "start" });
-                    });
-                }}
-                text="Start"
-              />
-              <section className="max-w-4xl">
-                <h4 className="mb-4 text-center text-lg font-bold">
-                  Select Cateogories
-                </h4>
-                <div className="flex flex-wrap justify-center gap-4">
-                  {Object.keys(categories).map((category) => {
-                    const categorySlug = categories[category][0];
-                    return (
+            <div className="m-auto flex h-full w-full max-w-7xl flex-col justify-start gap-20 px-4 md:justify-evenly">
+              <h1 className="my-8 text-center text-3xl font-bold md:my-0 md:text-5xl lg:text-6xl">
+                {(state.questions.length &&
+                  state.questions[state.qNumber].question) ||
+                  "Loading..."}
+              </h1>
+              <div className="mb-4 flex w-full flex-col gap-4 md:mb-0 md:grid md:grid-cols-2 md:grid-rows-2">
+                {state.questions.length &&
+                  state.answers[state.qNumber].map(
+                    (answer: string, index: number) => (
                       <ButtonCVA
-                        key={categorySlug}
-                        text={category}
-                        className="rounded-full text-sm"
-                        intent="special"
-                        pressed={selectedCategories.includes(categorySlug)}
-                        onClick={() => {
-                          if (selectedCategories.includes(categorySlug)) {
-                            setSelectedCategories((prev) =>
-                              prev.filter((cat) => cat !== categorySlug)
-                            );
-                          } else {
-                            setSelectedCategories((prev) => [
-                              ...prev,
-                              categorySlug,
-                            ]);
-                          }
-                        }}
+                        key={answer}
+                        text={answer}
+                        disabled={state.disabled}
+                        big={true}
+                        disableHover={state.disabled}
+                        intent={
+                          state.answered &&
+                          answer == state.questions[state.qNumber].correctAnswer
+                            ? "good"
+                            : state.answered &&
+                              answer !=
+                                state.questions[state.qNumber].correctAnswer &&
+                              index == state.selected
+                            ? "danger"
+                            : "normal"
+                        }
+                        onClick={() => handleAnswerClick(answer, index)}
                       />
-                    );
-                  })}
-                </div>
-              </section>
+                    )
+                  )}
+              </div>
             </div>
+          </>
+        ) : state.qNumber !== 0 ? (
+          <div className="flex min-h-screen flex-col items-center justify-center gap-8">
+            <h1>Loading...</h1>
           </div>
-          <footer className="mt-8 mb-4 w-full text-center text-sm text-neutral-500 [&>a]:underline">
-            <Link href="/iq-island">IQ Island</Link>
-          </footer>
-        </div>
-      )}
-    </div>
+        ) : (
+          <div className="flex grow flex-col items-center justify-center pt-[20vh] sm:pt-0">
+            <div className="contents">
+              <h1 className="mb-6 text-7xl font-black lg:text-9xl">
+                IQ Island
+              </h1>
+              <div className="flex flex-col items-center gap-16">
+                <ButtonCVA
+                  bigText
+                  disabled={clicked}
+                  disableHover={clicked}
+                  greyedOut={clicked}
+                  onClick={() => {
+                    setClicked(true);
+                    console.log(
+                      `https://the-trivia-api.com/api/questions?limit=25${
+                        selectedCategories.length
+                          ? `&categories=${selectedCategories.join(",")}`
+                          : ""
+                      }`
+                    );
+                    fetch(
+                      `https://the-trivia-api.com/api/questions?limit=25${
+                        selectedCategories.length
+                          ? `&categories=${selectedCategories.join(",")}`
+                          : ""
+                      }`
+                    )
+                      .then((res) => res.json())
+                      .then((data) => {
+                        console.log(data, "aaaaaaaaa");
+                        const shuffledAnswers = data.map((question: Question) =>
+                          [
+                            question.correctAnswer,
+                            ...question.incorrectAnswers,
+                          ].sort(() => Math.random() - 0.5)
+                        );
+                        dispatch({
+                          type: "fetch_questions",
+                          payload: {
+                            questions: data,
+                            answers: shuffledAnswers,
+                          },
+                        });
+                      })
+                      .then(() => {
+                        resetTimeout();
+                        dispatch({ type: "start" });
+                      });
+                  }}
+                  text="Start"
+                />
+                <section className="max-w-4xl">
+                  <h4 className="mb-4 text-center text-lg font-bold">
+                    Select Cateogories
+                  </h4>
+                  <div className="flex flex-wrap justify-center gap-4">
+                    {Object.keys(categories).map((category) => {
+                      const categorySlug = categories[category][0];
+                      return (
+                        <ButtonCVA
+                          key={categorySlug}
+                          text={category}
+                          className="rounded-full text-sm"
+                          intent="special"
+                          pressed={selectedCategories.includes(categorySlug)}
+                          onClick={() => {
+                            if (selectedCategories.includes(categorySlug)) {
+                              setSelectedCategories((prev) =>
+                                prev.filter((cat) => cat !== categorySlug)
+                              );
+                            } else {
+                              setSelectedCategories((prev) => [
+                                ...prev,
+                                categorySlug,
+                              ]);
+                            }
+                          }}
+                        />
+                      );
+                    })}
+                  </div>
+                </section>
+              </div>
+            </div>
+            <footer className="mt-8 mb-4 w-full text-center text-sm text-neutral-500 [&>a]:underline">
+              <Link href="/iq-island">IQ Island</Link>
+            </footer>
+          </div>
+        )}
+      </div>
+    </>
   );
 }

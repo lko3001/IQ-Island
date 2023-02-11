@@ -1,5 +1,6 @@
 import { usePlayer } from "@/components/context/PlayerContext";
 import { ButtonCVA } from "@/components/cva/ButtonCVA";
+import Head from "next/head";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { AiOutlineArrowLeft } from "react-icons/ai";
@@ -53,6 +54,18 @@ export default function Done() {
 
   return (
     <>
+      <Head>
+        <title>IQ Island</title>
+        <meta property="og:title" content="IQ Island" />
+        <meta name="description" content="Look other players' score" />
+        <meta property="og:description" content="Look other players' score" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta property="og:type" content="website" />
+        <link rel="shortcut icon" href="/q.ico" />
+        <meta property="og:image" content="/fUudAEr.png" />
+        <meta property="og:url" content="https://iq-island.vercel.app/" />
+      </Head>
       <Link href="/" className="fixed top-4 left-4 w-fit">
         <button className="black-shadow group flex w-fit flex-row items-center justify-start gap-2 rounded-full bg-blue-500 p-2 px-5 text-white transition-colors duration-200 hover:bg-blue-600 focus-visible:translate-y-1 active:translate-y-1">
           <AiOutlineArrowLeft className="text-2xl transition-transform duration-200 group-hover:-translate-x-2" />
