@@ -277,8 +277,8 @@ export default function Start() {
                 <AiFillHeart className="text-red-500" />
               </span>
             </div>
-            <div className="m-auto flex h-full w-full max-w-7xl flex-col justify-start gap-20 px-4 md:justify-evenly">
-              <h1 className="my-8 text-center text-3xl font-bold md:my-0 md:text-5xl lg:text-6xl">
+            <div className="my-0 mx-auto flex h-full w-full max-w-7xl flex-col justify-start px-4 md:m-auto md:justify-evenly md:gap-20">
+              <h1 className="my-14 text-center text-3xl font-bold md:my-0 md:text-5xl lg:text-6xl">
                 {(state.questions.length &&
                   state.questions[state.qNumber].question) ||
                   "Loading..."}
