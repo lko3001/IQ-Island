@@ -7,6 +7,7 @@ import { StatsProvider } from "@/components/context/StatsContext";
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   variable: "--spaceGrotesk",
+  display: 'swap' 
 });
 
 export default function App({ Component, pageProps }: AppProps) {
